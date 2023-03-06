@@ -1,0 +1,22 @@
+apiVersion: dapr.io/v1alpha1
+kind: Resiliency
+metadata:
+  name: resiliency-config
+spec:
+  policies:
+    timeouts:
+      general: 5s
+      important: 60s
+      largeResponse: 10s
+
+    retries:
+      actorRetry:
+        policy: constant
+        duration: 30s
+        maxRetries: 10
+
+  targets:
+    actors:
+      CheckoutActor:
+        timeout: general
+        retry: actorRetry

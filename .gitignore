@@ -1,0 +1,21 @@
+# Tools
+.idea
+*.suo
+*.user
+*.sln.docstates
+*.sln.ide/
+*.userprefs
+*.GhostDoc.xml
+.vs
+
+# Outputs
+publish
+results
+
+# Build related
+tools
+
+# .NET
+[Bb]in/
+[Oo]bj/
+[Pp]ackages/

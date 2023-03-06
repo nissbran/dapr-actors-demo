@@ -1,0 +1,6 @@
+POST http://localhost:7080/api/checkout
+content-type: application/json
+
+{
+    "orderId":"21221"
+}

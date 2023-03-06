@@ -1,0 +1,28 @@
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+WORKDIR /app
+EXPOSE 80
+EXPOSE 443
+
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+WORKDIR /src
+COPY ["client-api/ClientApi.csproj", "client-api/"]
+COPY ["actors/Actors.csproj", "actors/"]
+RUN dotnet restore "client-api/ClientApi.csproj"
+COPY ["client-api/", "client-api/"]
+COPY ["actors/", "actors/"]
+RUN dotnet build "client-api/ClientApi.csproj" -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "client-api/ClientApi.csproj" -c Release -o /app/publish
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+
+RUN chown -R www-data:www-data /app
+USER www-data
+
+ENV ASPNETCORE_URLS=http://+:5000
+EXPOSE 5000
+
+ENTRYPOINT ["dotnet", "ClientApi.dll"]
