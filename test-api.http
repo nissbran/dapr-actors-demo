@@ -4,3 +4,39 @@ content-type: application/json
 {
     "orderId":"21221"
 }
+
+
+
+###
+GET http://localhost:7080/api/checkout/0edd3faa-87d9-473a-adb0-a192d8cf9ebc
+###
+GET http://localhost:7080/api/checkout/c28a96db-0e28-4a19-a8f6-ae58c74a4753/exception
+
+###
+POST https://localhost:5091/api/checkout
+content-type: application/json
+
+{
+    "orderId":"21221"
+}
+
+###
+
+POST https://localhost:5091/api/checkout/4d395a13-5119-450b-aa6b-c80790982a70/item
+content-type: application/json
+
+{
+    "name":"asdf"
+}
+
+###
+GET https://localhost:5091/api/checkout/f3e75273-486c-499c-9c43-3a04fa3c4419
+###
+GET https://localhost:5091/api/checkout/fd0daba3-e6e8-4b2d-831e-d992db9beafa/exception
+
+###
+POST https://localhost:5091/api/checkout/4d395a13-5119-450b-aa6b-c80790982a70/re-entrance
+content-type: application/json
+
+{
+}

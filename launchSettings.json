@@ -3,15 +3,16 @@
     "Docker Compose": {
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
-      "serviceActions": {
-        "redis": "StartWithoutDebugging",
-        "actor-worker-1": "StartDebugging",
-        "actor-worker-1-dapr": "StartWithoutDebugging",
-        "actor-worker-2": "StartDebugging",
-        "actor-worker-2-dapr": "StartWithoutDebugging",
-        "client-api": "StartDebugging",
-        "client-api-dapr": "StartWithoutDebugging"
-      }
+        "serviceActions": {
+            "redis": "StartWithoutDebugging",
+            "actor-worker-1": "StartDebugging",
+            "actor-worker-1-dapr": "StartWithoutDebugging",
+            "actor-worker-2": "StartDebugging",
+            "actor-worker-2-dapr": "StartWithoutDebugging",
+            "client-api": "StartDebugging",
+            "client-api-dapr": "StartWithoutDebugging",
+            "dapr-placement": "StartWithoutDebugging"
+        }
     }
   }
 }

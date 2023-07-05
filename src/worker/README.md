@@ -3,5 +3,5 @@
 Run with dapr
 
 ```
-dapr run --app-id processor --app-port 5081 --resources-path ../../dapr/local -- dotnet run
+dapr run --app-id worker --app-port 5100 -- dotnet run
 ```

@@ -1,7 +1,6 @@
-using System.Text.Json;
 using Serilog;
 using Serilog.Sinks.SystemConsole.Themes;
-using Worker;
+using SingleApi;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(theme: AnsiConsoleTheme.Sixteen)
@@ -19,7 +18,6 @@ try
         .ReadFrom.Configuration(ctx.Configuration)
         .Enrich.FromLogContext()
         .WriteTo.Console(theme: AnsiConsoleTheme.Sixteen));
-    
 
     var app = builder
         .ConfigureServices()

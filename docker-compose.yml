@@ -1,77 +1,139 @@
 version: '3.4'
 
 services:
-  client-api:
-    image: ${DOCKER_REGISTRY-}client-api
+  api-1:
+    image: ${DOCKER_REGISTRY-}single-api
     build:
       context: src\
-      dockerfile: Dockerfile.api
+      dockerfile: Dockerfile.single-api
     ports:
-      - 7080:5000
-  client-api-dapr:
-    image: daprio/daprd:1.10.2-mariner
+      - 7080:80    
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+  api-1-dapr:
+    image: daprio/daprd:1.11.1
     command: ["./daprd",
-     "-app-id", "client-api",
-     "-app-port", "5000",
+     "-app-id", "single-api",
+     "-app-port", "80",
      "-placement-host-address", "dapr-placement:50006",
      "-resources-path", "./components"]   
     volumes:
       - "./dapr/docker-components/:/components"
     depends_on:
-      client-api:
+      api-1:
         condition: service_started
       dapr-placement:
         condition: service_started
-    network_mode: "service:client-api"
+    network_mode: "service:api-1"
 
-  actor-worker-1:
-    image: ${DOCKER_REGISTRY-}actor-worker
+  api-2:
+    image: ${DOCKER_REGISTRY-}single-api
     build:
       context: src\
-      dockerfile: Dockerfile.worker
+      dockerfile: Dockerfile.single-api
     ports:
-      - 7081:5000
-  actor-worker-1-dapr:
-    image: daprio/daprd:1.10.2-mariner
+      - 7081:80    
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+  api-2-dapr:
+    image: daprio/daprd:1.11.1
     command: ["./daprd",
-     "-app-id", "actor-worker",
-     "-app-port", "5000",
+     "-app-id", "single-api",
+     "-app-port", "80",
      "-placement-host-address", "dapr-placement:50006",
      "-resources-path", "./components"]   
     volumes:
       - "./dapr/docker-components/:/components"
     depends_on:
-      actor-worker-1:
+      api-2:
         condition: service_started
       dapr-placement:
         condition: service_started
-    network_mode: "service:actor-worker-1"
+    network_mode: "service:api-2"
 
-  actor-worker-2:
-    image: ${DOCKER_REGISTRY-}actor-worker
-    build:
-      context: src\
-      dockerfile: Dockerfile.worker
-    ports:
-      - 7082:5000
-  actor-worker-2-dapr:
-    image: daprio/daprd:1.10.2-mariner
-    command: ["./daprd",
-     "-app-id", "actor-worker",
-     "-app-port", "5000",
-     "-placement-host-address", "dapr-placement:50006",
-     "-resources-path", "./components"]   
-    volumes:
-      - "./dapr/docker-components/:/components"
-    depends_on:
-      actor-worker-2:
-        condition: service_started
-      dapr-placement:
-        condition: service_started
-    network_mode: "service:actor-worker-2"
+
+  # client-api:
+  #   image: ${DOCKER_REGISTRY-}client-api
+  #   build:
+  #     context: src\
+  #     dockerfile: Dockerfile.api
+  #   ports:
+  #     - 7080:80    
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS=http://0.0.0.0:80
+  # client-api-dapr:
+  #   image: daprio/daprd:1.11.1
+  #   command: ["./daprd",
+  #    "-app-id", "client-api",
+  #    "-app-port", "80",
+  #    "-placement-host-address", "dapr-placement:50006",
+  #    "-resources-path", "./components"]   
+  #   volumes:
+  #     - "./dapr/docker-components/:/components"
+  #   depends_on:
+  #     client-api:
+  #       condition: service_started
+  #     dapr-placement:
+  #       condition: service_started
+  #   network_mode: "service:client-api"
+
+  # actor-worker-1:
+  #   image: ${DOCKER_REGISTRY-}actor-worker
+  #   build:
+  #     context: src\
+  #     dockerfile: Dockerfile.worker
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS=http://0.0.0.0:80
+  #   ports:
+  #     - 7081:80
+  # actor-worker-1-dapr:
+  #   image: daprio/daprd:1.11.1
+  #   command: ["./daprd",
+  #    "-app-id", "actor-worker",
+  #    "-app-port", "80",
+  #    "-placement-host-address", "dapr-placement:50006",
+  #    "-resources-path", "./components"]   
+  #   volumes:
+  #     - "./dapr/docker-components/:/components"
+  #   depends_on:
+  #     actor-worker-1:
+  #       condition: service_started
+  #     dapr-placement:
+  #       condition: service_started
+  #   network_mode: "service:actor-worker-1"
+
+  # actor-worker-2:
+  #   image: ${DOCKER_REGISTRY-}actor-worker
+  #   build:
+  #     context: src\
+  #     dockerfile: Dockerfile.worker
+  #   environment:
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_URLS=http://0.0.0.0:80
+  #   ports:
+  #     - 7082:80
+  # actor-worker-2-dapr:
+  #   image: daprio/daprd:1.11.1
+  #   command: ["./daprd",
+  #    "-app-id", "actor-worker",
+  #    "-app-port", "80",
+  #    "-placement-host-address", "dapr-placement:50006",
+  #    "-resources-path", "./components"]   
+  #   volumes:
+  #     - "./dapr/docker-components/:/components"
+  #   depends_on:
+  #     actor-worker-2:
+  #       condition: service_started
+  #     dapr-placement:
+  #       condition: service_started
+  #   network_mode: "service:actor-worker-2"
 
   dapr-placement:
-    image: daprio/dapr:1.10.2-mariner
+    image: daprio/dapr:1.11.1
     command: ["./placement", "--port", "50006"]
     ports:
       - "50006:50006"

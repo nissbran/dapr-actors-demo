@@ -1,6 +1,7 @@
-﻿using Serilog;
+﻿using Actors;
+using Serilog;
 
-namespace ClientApi;
+namespace SingleApi;
 
 internal static class HostingExtensions
 {
@@ -10,6 +11,14 @@ internal static class HostingExtensions
         
         builder.Services.AddActors(options =>
         {
+            options.ReentrancyConfig.Enabled = true;
+            options.ReentrancyConfig.MaxStackDepth = 10;
+            options.Actors.RegisterActor<CheckoutOrder>();
+            
+            // options.ActorIdleTimeout = TimeSpan.FromMinutes(60);
+            // options.ActorScanInterval = TimeSpan.FromSeconds(30);
+            // options.RemindersStoragePartitions = 7;
+            // options.DrainRebalancedActors = true;
         });
 
         return builder.Build();
@@ -18,9 +27,11 @@ internal static class HostingExtensions
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
         //app.UseMiddleware<RequestResponseLoggingMiddleware>();
+        
         app.UseSerilogRequestLogging();
-
+        app.MapActorsHandlers();
         app.MapCheckoutApi();
+        
         
         return app;
     }
